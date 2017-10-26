@@ -1,0 +1,103 @@
+{
+  "name": "che-js-plugin",
+  "version": "1.0.0",
+  "publisher": "redhat",
+  "engines": {
+    "che": "6.0.0"
+  },
+  "description": "First Che JS Plugin",
+  "main": "out/plugin-bundle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evidolob/che-js-plugin.git"
+  },
+  "author": "Yevhen Vydolob",
+  "license": "EPL-1.0",
+  "displayName": "Che JS API Plugin",
+  "categories": [
+    "Languages",
+    "Snippets",
+    "Linters",
+    "Themes",
+    "Debuggers",
+    "Formatters",
+    "Keymaps",
+    "Other"
+  ],
+  "keywords": [
+    "JS API"
+  ],
+  "pluginDependencies": [
+    "che.js.api"
+  ],
+  "contributes": {
+    "actions": [
+      {
+        "action": {
+          "id": "cjp.test.action",
+          "text": "Hello JS API",
+          "description": "First Action From JS Plugin",
+          "icon": "cjp.image1",
+          "addToGroup": [
+            {
+              "groupId": "helpGroup",
+              "relativeTo": "someAction",
+              "anchor": "last"
+            }
+          ],
+          "keybinding": {
+            "win": "control alt G",
+            "linux": "control alt G",
+            "mac": "cmd alt G"
+          }
+        }
+      },
+      {
+        "group": {
+          "id": "cjp.test.group",
+          "text": "JS Group",
+          "description": "JS Test Group",
+          "icon": "cjp.image2",
+          "popup": true,
+          "addToGroup": {
+            "groupId": "helpGroup",
+            "relativeTo": "someAction",
+            "anchor": "last"
+          },
+          "actions": [
+            {
+              "action": {
+                "id": "cjp.action.in.group",
+                "text": "Action in Group",
+                "description": "Action defined in group",
+                "icon": "cjp.imageFactory"
+              }
+            },
+            "separator",
+            {
+              "group": {
+                "id": "cjp.group.in.group"
+              }
+            },
+            {
+              "reference": "cjp.test.action"
+            }
+          ]
+        }
+      }
+    ],
+    "images": [
+      {
+        "id": "cjp.image1",
+        "url": "https://png.icons8.com/download-from-cloud/ios7/32"
+      },
+      {
+        "id": "cjp.image2",
+        "html": "<i class=\"fa fa-bath\" aria-hidden=\"true\"></i>"
+      }
+    ]
+  }
+}

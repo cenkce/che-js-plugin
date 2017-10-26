@@ -1,0 +1,14 @@
+{
+    "include": [
+        "src/**/*"
+    ],
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "target": "es5",
+        "outFile":"./out/plugin-bundle.js",
+        // "outDir": "./out",
+        "module": "AMD",
+        "moduleResolution":"classic"
+
+    }
+}
