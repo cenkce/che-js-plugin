@@ -1,14 +1,19 @@
 {
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "typings/**/*"
     ],
-    "compilerOptions": {
-        "noImplicitAny": true,
-        "target": "es5",
-        "outFile":"./out/plugin-bundle.js",
-        // "outDir": "./out",
-        "module": "AMD",
-        "moduleResolution":"classic"
-
-    }
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "target": "es5",
+    "allowJs": true,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "module": "commonjs",
+    "lib": [
+        "es6",
+        "dom"
+    ],
+    "moduleResolution": "node"
 }

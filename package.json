@@ -1,14 +1,16 @@
 {
   "name": "che-js-plugin",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "publisher": "redhat",
   "engines": {
     "che": "6.0.0"
   },
   "description": "First Che JS Plugin",
-  "main": "out/plugin-bundle.js",
+  "main": "dist/bundle.js",
+  "loader": "AMD",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bundle": "node_modules/.bin/webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -99,5 +101,14 @@
         "html": "<i class=\"fa fa-bath\" aria-hidden=\"true\"></i>"
       }
     ]
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.17",
+    "ts-loader": "^3.1.0",
+    "typescript": "^2.5.3",
+    "uglifyjs-webpack-plugin": "^1.0.1",
+    "webpack": "^3.8.1"
   }
 }
