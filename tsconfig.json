@@ -1,7 +1,6 @@
 {
     "include": [
-        "src/**/*",
-        "typings/**/*"
+        "src/**/*"
     ],
     "outDir": "./dist/",
     "noImplicitAny": true,

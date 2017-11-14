@@ -2,7 +2,17 @@
 declare interface CheApi {
     imageRegistry: ImageRegistry;
     actionManager: ActionManager;
+
 }
+declare interface PluginContext {
+    getApi(): CheApi;
+    addDisposable(d: Disposible): void
+}
+
+declare interface Disposible {
+    dispose(): void;
+}
+
 /**
  * Holds and manages all IDE icon resources, each resource mapped to their id. We support 3 way to
  * provide image: URL, HTML, image element factory
@@ -14,7 +24,7 @@ declare interface ImageRegistry {
      * @param id the image id
      * @param url the image url
      */
-    registerUrl(id: string, url: string): void;
+    registerUrl(id: string, url: string): Disposible;
 
     /**
      * Register image html. For example html may be some FontAwesome icon
@@ -22,7 +32,7 @@ declare interface ImageRegistry {
      * @param id the image id
      * @param html the image html
      */
-    registerHtml(id: string, html: string): void;
+    registerHtml(id: string, html: string): Disposible;
 
     /**
      * Register image factory.Register image factory.
@@ -32,7 +42,7 @@ declare interface ImageRegistry {
      * @param id the image id
      * @param factory the image factory
      */
-    registerFactory(id: string, factory: ImageFactory): void;
+    registerFactory(id: string, factory: ImageFactory): Disposible;
 
     /**
      * Returns new image element each time
@@ -61,7 +71,7 @@ declare interface ActionManager {
        * @param updateAction the update handler
        * @param performAction the perform handler
        */
-    registerAction(actionId: string, updateAction: UpdateAction, performAction: PerformAction): void;
+    registerAction(actionId: string, updateAction: UpdateAction, performAction: PerformAction): Disposible;
 }
 
 declare interface UpdateAction {

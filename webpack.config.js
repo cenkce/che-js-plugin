@@ -20,8 +20,8 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    libraryTarget : "umd",
-    libraryExport:"default"
+    libraryTarget : "amd"
+    //libraryExport:"default"
   },
   plugins:[
     new CleanWebpackPlugin(['dist'])
