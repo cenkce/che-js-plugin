@@ -336,6 +336,8 @@
     "cellTableCellColor": "#666666",
     "findResultsBackground": "#c1be9e",
     "findResultsTextColor": "#272727",
-    "gitPanelRepositoryChangesLabelColor" : "red",
-    "gitPanelRepositoryChangesLabelBackgroundColor" : "green"
+    "gitPanelRepositoryChangesLabelColor": "red",
+    "gitPanelRepositoryChangesLabelBackgroundColor": "green",
+    "radioButtonBackgroundColor": "#BDBDBD",
+    "checkBoxIndeterminateIconColor": "#b7b7b7"
 }

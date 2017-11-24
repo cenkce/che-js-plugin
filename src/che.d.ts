@@ -1,7 +1,21 @@
+declare module "*.svg"{
+    const content: string;
+    export default content;
+}
+declare function require(string): any;
+declare module "*.png" {
+    const content: any;
+    export default content;
+}
+declare module "*.html" {
+    const content: any;
+    export default content;
+}
 
 declare interface CheApi {
     imageRegistry: ImageRegistry;
     actionManager: ActionManager;
+    workspace: Workspace;
 
 }
 declare interface PluginContext {
@@ -12,6 +26,117 @@ declare interface PluginContext {
 declare interface Disposible {
     dispose(): void;
 }
+
+declare interface Workspace {
+    /**
+   * Sets passed part as active. Sets focus to part and open it.
+   *
+   * @param part part which will be active
+   */
+    activatePart(part: Part): void;
+
+    /**
+     * Check is given part is active
+     *
+     * @return true if part is active
+     */
+    isActivePart(part: Part): boolean;
+
+    /**
+     * Opens given Part
+     *
+     * @param part
+     * @param type
+     */
+    openPart(part: Part, type: che.ide.parts.PartStackType): void;
+
+    /**
+     * Hides given Part
+     *
+     * @param part
+     */
+    hidePart(part: Part): void;
+
+    /**
+     * Remove given Part
+     *
+     * @param part
+     */
+    removePart(part: Part): void;
+}
+
+declare interface Part {
+    /** @return Title of the Part */
+    getTitle(): String;
+
+    /**
+     * Returns count of unread notifications. Is used to display a badge on part button.
+     *
+     * @return count of unread notifications
+     */
+    getUnreadNotificationsCount(): number;
+
+    /**
+     * Returns the title tool tip text of this part. An empty string result indicates no tool tip. If
+     * this value changes the part must fire a property listener event with <code>PROP_TITLE</code>.
+     *
+     * <p>The tool tip text is used to populate the title bar of this part's visual container.
+     *
+     * @return the part title tool tip (not <code>null</code>)
+     */
+    getTitleToolTip(): String;
+
+    /**
+     * Return size of part. If current part is vertical panel then size is height. If current part is
+     * horizontal panel then size is width.
+     *
+     * @return size of part
+     */
+    getSize(): number;
+
+    /**
+     * This method is called when Part is opened. Note: this method is NOT called when part gets
+     * focused. It is called when new tab in PartStack created.
+     */
+    onOpen(): void;
+
+    /** @return */
+    getView(): Element;
+
+    getImageId(): String;
+}
+
+declare namespace che {
+    namespace ide {
+        namespace parts {
+            enum PartStackType {
+                /**
+             * Contains navigation parts. Designed to navigate by project, types, classes and any other
+             * entities. Usually placed on the LEFT side of the IDE.
+             */
+                NAVIGATION,
+                /**
+                 * Contains informative parts. Designed to display the state of the application, project or
+                 * processes. Usually placed on the BOTTOM side of the IDE.
+                 */
+                INFORMATION,
+                /**
+                 * Contains editing parts. Designed to provide an ability to edit any resources or settings.
+                 * Usually placed in the CENTRAL part of the IDE.
+                 */
+                EDITING,
+                /**
+                 * Contains tooling parts. Designed to provide handy features and utilities, access to other
+                 * services or any other features that are out of other PartType scopes. Usually placed on the
+                 * RIGHT side of the IDE.
+                 */
+                TOOLING
+            }
+        }
+    }
+
+}
+
 
 /**
  * Holds and manages all IDE icon resources, each resource mapped to their id. We support 3 way to
