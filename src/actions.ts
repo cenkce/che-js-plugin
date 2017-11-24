@@ -1,10 +1,10 @@
 
 import { HelloPart } from './HelloPart'
 
-let workspace;
+let partManager;
 let part;
 export function initActions(ctx: PluginContext) {
-    workspace = ctx.getApi().workspace;
+    partManager = ctx.getApi().partManager;
     let d1 = ctx.getApi().actionManager.registerAction("cjp.test.action", (d: any) => { d.setEnabledAndVisible(true) }, showPart);
     let d2 = ctx.getApi().actionManager.registerAction("cjp.action.in.group", (d: any) => { d.setEnabledAndVisible(true) }, hidePart);
     ctx.addDisposable(d1);
@@ -15,14 +15,14 @@ function showPart() {
     if (!part) {
         part = new HelloPart("Js Part");
         let parts = che.ide.parts.PartStackType;
-        workspace.openPart(part, parts.INFORMATION);
-        workspace.activatePart(part);
+        partManager.openPart(part, parts.INFORMATION);
+        partManager.activatePart(part);
     } else {
-        workspace.activatePart(part);
+        partManager.activatePart(part);
     }
 
 }
 
 function hidePart() {
-    workspace.hidePart(part);
+    partManager.hidePart(part);
 }

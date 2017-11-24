@@ -15,7 +15,7 @@ declare module "*.html" {
 declare interface CheApi {
     imageRegistry: ImageRegistry;
     actionManager: ActionManager;
-    workspace: Workspace;
+    partManager: PartManager;
 
 }
 declare interface PluginContext {
@@ -27,7 +27,7 @@ declare interface Disposible {
     dispose(): void;
 }
 
-declare interface Workspace {
+declare interface PartManager {
     /**
    * Sets passed part as active. Sets focus to part and open it.
    *
