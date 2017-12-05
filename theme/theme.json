@@ -81,7 +81,7 @@
     "editorPanelBackgroundColor": "#D6D6D9",
     "editorTabsBackgroundColor": "#D6D6D9",
     "editorPanelBorderColor": "#8E8E8E",
-    "editorBackgroundColor": "white",
+    "editorBackgroundColor": "red",
     "editorCurrentLineColor": "rgba(215, 215, 215, 0.45)",
     "editorDefaultFontColor": "black",
     "editorSelectionColor": "#d4e2ff",
@@ -339,5 +339,7 @@
     "gitPanelRepositoryChangesLabelColor": "red",
     "gitPanelRepositoryChangesLabelBackgroundColor": "green",
     "radioButtonBackgroundColor": "#BDBDBD",
-    "checkBoxIndeterminateIconColor": "#b7b7b7"
+    "checkBoxIndeterminateIconColor": "#b7b7b7",
+    "editorLinkedGroupColor" : "inherit",
+    "editorLinkedGroupBackground" : "#000099"
 }

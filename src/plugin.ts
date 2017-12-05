@@ -1,6 +1,7 @@
 'use strict';
 import { initActions } from './actions';
 import { HelloPart } from './HelloPart';
+import {handleEvents} from './events';
 import './clock/clock.css';
 
 const  snowflake = require('./snowflake.svg');
@@ -16,6 +17,7 @@ export function activate(ctx: PluginContext) {
   ctx.getApi().imageRegistry.registerUrl("js.plugin.png", inter);
 
   ctx.addDisposable(d);
+  handleEvents(ctx);
   initActions(ctx);
 }
 

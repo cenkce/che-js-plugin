@@ -1,4 +1,4 @@
-declare module "*.svg"{
+declare module "*.svg" {
     const content: string;
     export default content;
 }
@@ -16,15 +16,243 @@ declare interface CheApi {
     imageRegistry: ImageRegistry;
     actionManager: ActionManager;
     partManager: PartManager;
-
+    workspaceRuntime: WorkspaceRuntime;
+    editorManager: EditorManager;
+    appContext: AppContext;
 }
+
 declare interface PluginContext {
     getApi(): CheApi;
-    addDisposable(d: Disposible): void
+    addDisposable(d: Disposable): void
 }
 
-declare interface Disposible {
+declare interface Disposable {
     dispose(): void;
+}
+/**
+ * Represents current context of the IDE application.
+ */
+declare interface AppContext {
+
+    //TODO add resources methods
+    // Container getWorkspaceRoot();
+    // Project[] getProjects();
+    // Resource getResource();
+    // Resource[] getResources();
+    // Path getProjectsRoot();
+    // WorkspaceImpl getWorkspace();
+
+    /**
+     * Returns the root project which is in context. To find out specified sub-project in context,
+     * method {@link #getResource()} should be called. Resource is bound to own project and to get
+     * {@link Project} instance from {@link Resource}, method {@link Resource#getRelatedProject()}
+     * should be called.
+     *
+     * <p>May return {@code null} if there is no project in context.
+     *
+     * @return the root project or {@code null}
+     */
+    getRootProject(): Project;
+
+    /**
+    * Returns the current user.
+    *
+    * @return current user
+    */
+    getCurrentUser(): CurrentUser;
+
+    getWorkspaceId(): String;
+
+    /**
+     * Returns URL of Che Master API endpoint.
+     */
+    getMasterApiEndpoint(): String;
+
+    /**
+     * Returns URL of ws-agent server API endpoint.
+     *
+     * @throws RuntimeException if ws-agent server doesn't exist. Normally it may happen when
+     *     workspace is stopped.
+     */
+    getWsAgentServerApiEndpoint(): String;
+
+    /**
+    * Returns context properties, key-value storage that allows to store data in the context for
+    * plugins and extensions.
+    *
+    * @return a modifiable properties map
+    */
+    getProperties(): { [key: string]: string }
+
+}
+
+/**
+ * An object that represents client side project.
+ *
+ * <p>Features of projects include:
+ *
+ * <ul>
+ *   <li>A project collects together a set of files and folders.
+ *   <li>A project's location controls where the project's resources are stored in the local file
+ *       system.
+ * </ul>
+ *
+ * Project also extends {@link ProjectConfig} which contains the meta-data required to define a
+ * project.
+ *
+ * <p>To get list of currently of all loaded projects in the IDE, use {@link
+ * AppContext#getProjects()}
+ *
+ * <p>Note. This interface is not intended to be implemented by clients.
+ *
+ * @see AppContext#getProjects()
+ */
+declare interface Project {
+    /**
+     * Check whether current project has problems. Problem project calculates in a runtime, so it is
+     * not affects stored configuration on the server. To find out the reasons why project has
+     * problems, following code snippet may be helpful:
+     *
+     * <p>Example of usage:
+     *
+     * <pre>
+     *     Project project = ... ;
+     *     if (project.isProblem()) {
+     *         Marker problemMarker = getMarker(ProblemProjectMarker.PROBLEM_PROJECT).get();
+     *
+     *         String message = String.valueOf(problemMarker.getAttribute(Marker.MESSAGE));
+     *     }
+     * </pre>
+     *
+     * @return {@code true} if current project has problems, otherwise {@code false}
+     */
+    isProblem(): boolean;
+    /**
+     * Returns the {@code true} if project physically exists on the file system.
+     *
+     * <p>Project may not be exists on file system, but workspace may has configured in the current
+     * workspace.
+     *
+     * @return {@code true} if project physically exists on the file system, otherwise {@code false}
+     * @since 4.4.0
+     */
+    exists(): boolean;
+
+    /**
+     * Checks whether given project {@code type} is applicable to current project.
+     *
+     * @param type the project type to check
+     * @return true if given project type is applicable to current project
+     */
+    isTypeOf(type : String):boolean;
+    
+    /**
+     * Returns the attribute value for given {@code key}. If such attribute doesn't exist, {@code
+     * null} is returned. If there is more than one value exists for given {@code key}, than first
+     * value is returned.
+     *
+     * @param key the attribute name
+     * @return first value for the given {@code key} or null if such attribute doesn't exist
+     */
+    getAttribute(key:String) : String;
+
+    /**
+     * Returns the list of attributes for given {@code key}. If such attribute doesn't exist, {@code
+     * null} is returned.
+     *
+     * @param key the attribute name
+     * @return the list with values for the given {@code key} or null if such attribute doesn't exist
+     */
+    getAttributes(key:String) : String[];
+
+
+}
+
+declare interface CurrentUser {
+    getId(): String;
+    getPreferences(): { [key: string]: string };
+}
+
+declare interface EditorManager {
+    addFileOperationListener(listener: { (event: FileOperationEvent): void }):Disposable;
+    addEditorOpenedListener(listener: { (event: EditorOpenedEvent): void }):Disposable;
+}
+
+declare interface EditorOpenedEvent {
+    getFile(): VirtualFile;
+    getEditor(): EditorPartPresenter;
+}
+
+declare interface EditorPartPresenter {
+ //TODO 
+}
+
+declare interface FileOperationEvent {
+    getFile(): VirtualFile;
+
+    getOperationType(): che.ide.editor.FileOperation
+}
+
+declare interface VirtualFile {
+    getLocation(): String;
+    getName(): String;
+    getDisplayName(): String;
+    isReadOnly(): boolean;
+    getContentUrl(): String;
+}
+
+declare interface WorkspaceRuntime {
+    addServerRunningListener(listener: { (event: ServerRunningEvent): void }): Disposable;
+
+    addWsAgentServerRunningListener(listener: { (event: WsAgentServerRunningEvent): void }): Disposable;
+
+    addTerminalAgentServerRunningListener(listener: { (event: TerminalAgentServerRunningEvent): void }): Disposable;
+
+    addExecAgentServerRunningListener(listener: { (event: ExecAgentServerRunningEvent): void }): Disposable;
+
+    addServerStoppedListener(listener: { (event: ServerStoppedEvent): void }): Disposable;
+
+    addWsAgentServerStoppedListener(listener: { (event: WsAgentServerStoppedEvent): void }): Disposable;
+
+    addTerminalAgentServerStoppedListener(listener: { (event: TerminalAgentServerStoppedEvent): void }): Disposable;
+
+    addExecAgentServerStoppedListener(listener: { (event: ExecAgentServerStoppedEvent): void }): Disposable;
+}
+
+declare interface ServerRunningEvent {
+    getServerName(): String;
+
+    getMachineName(): String;
+}
+
+declare interface WsAgentServerRunningEvent {
+    getMachineName(): String;
+}
+
+declare interface TerminalAgentServerRunningEvent {
+    getMachineName(): String;
+}
+
+declare interface ExecAgentServerRunningEvent {
+    getMachineName(): String;
+}
+
+declare interface ServerStoppedEvent {
+    getServerName(): String;
+
+    getMachineName(): String;
+}
+
+declare interface WsAgentServerStoppedEvent {
+    getMachineName(): String;
+}
+
+declare interface TerminalAgentServerStoppedEvent {
+    getMachineName(): String;
+}
+
+declare interface ExecAgentServerStoppedEvent {
+    getMachineName(): String;
 }
 
 declare interface PartManager {
@@ -108,6 +336,13 @@ declare interface Part {
 
 declare namespace che {
     namespace ide {
+        namespace editor {
+            enum FileOperation {
+                OPEN,
+                SAVE,
+                CLOSE
+            }
+        }
         namespace parts {
             enum PartStackType {
                 /**
@@ -149,7 +384,7 @@ declare interface ImageRegistry {
      * @param id the image id
      * @param url the image url
      */
-    registerUrl(id: string, url: string): Disposible;
+    registerUrl(id: string, url: string): Disposable;
 
     /**
      * Register image html. For example html may be some FontAwesome icon
@@ -157,7 +392,7 @@ declare interface ImageRegistry {
      * @param id the image id
      * @param html the image html
      */
-    registerHtml(id: string, html: string): Disposible;
+    registerHtml(id: string, html: string): Disposable;
 
     /**
      * Register image factory.Register image factory.
@@ -167,7 +402,7 @@ declare interface ImageRegistry {
      * @param id the image id
      * @param factory the image factory
      */
-    registerFactory(id: string, factory: ImageFactory): Disposible;
+    registerFactory(id: string, factory: ImageFactory): Disposable;
 
     /**
      * Returns new image element each time
@@ -196,7 +431,7 @@ declare interface ActionManager {
        * @param updateAction the update handler
        * @param performAction the perform handler
        */
-    registerAction(actionId: string, updateAction: UpdateAction, performAction: PerformAction): Disposible;
+    registerAction(actionId: string, updateAction: UpdateAction, performAction: PerformAction): Disposable;
 }
 
 declare interface UpdateAction {
