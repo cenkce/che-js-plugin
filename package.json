@@ -40,8 +40,8 @@
       {
         "action": {
           "id": "cjp.test.action",
-          "text": "Show Part sdfsafasdfsadf",
-          "description": "Show Part sdfsdfsd af",
+          "text": "Show Part",
+          "description": "Show Part",
           "icon": "cjp.image1",
           "addToGroup": [
             {
