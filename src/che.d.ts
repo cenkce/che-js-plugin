@@ -16,11 +16,18 @@ declare interface CheApi {
     imageRegistry: ImageRegistry;
     actionManager: ActionManager;
     partManager: PartManager;
-    workspaceRuntime: WorkspaceRuntime;
     editorManager: EditorManager;
     appContext: AppContext;
+    eventBus: EventBus;
 }
 
+declare interface EventBus {
+    fire<E>(type: EventType<E>, event: E): EventBus;
+    addHandler<E>(type: EventType<E>, handler: { (event: E): void });
+}
+declare interface EventType<E> {
+    type(): string;
+}
 declare interface PluginContext {
     getApi(): CheApi;
     addDisposable(d: Disposable): void
@@ -61,12 +68,12 @@ declare interface AppContext {
     */
     getCurrentUser(): CurrentUser;
 
-    getWorkspaceId(): String;
+    getWorkspaceId(): string;
 
     /**
      * Returns URL of Che Master API endpoint.
      */
-    getMasterApiEndpoint(): String;
+    getMasterApiEndpoint(): string;
 
     /**
      * Returns URL of ws-agent server API endpoint.
@@ -74,7 +81,7 @@ declare interface AppContext {
      * @throws RuntimeException if ws-agent server doesn't exist. Normally it may happen when
      *     workspace is stopped.
      */
-    getWsAgentServerApiEndpoint(): String;
+    getWsAgentServerApiEndpoint(): string;
 
     /**
     * Returns context properties, key-value storage that allows to store data in the context for
@@ -120,7 +127,7 @@ declare interface Project {
      *     if (project.isProblem()) {
      *         Marker problemMarker = getMarker(ProblemProjectMarker.PROBLEM_PROJECT).get();
      *
-     *         String message = String.valueOf(problemMarker.getAttribute(Marker.MESSAGE));
+     *         string message = string.valueOf(problemMarker.getAttribute(Marker.MESSAGE));
      *     }
      * </pre>
      *
@@ -144,7 +151,7 @@ declare interface Project {
      * @param type the project type to check
      * @return true if given project type is applicable to current project
      */
-    isTypeOf(type: String): boolean;
+    isTypeOf(type: string): boolean;
 
     /**
      * Returns the attribute value for given {@code key}. If such attribute doesn't exist, {@code
@@ -154,7 +161,7 @@ declare interface Project {
      * @param key the attribute name
      * @return first value for the given {@code key} or null if such attribute doesn't exist
      */
-    getAttribute(key: String): String;
+    getAttribute(key: string): string;
 
     /**
      * Returns the list of attributes for given {@code key}. If such attribute doesn't exist, {@code
@@ -163,98 +170,32 @@ declare interface Project {
      * @param key the attribute name
      * @return the list with values for the given {@code key} or null if such attribute doesn't exist
      */
-    getAttributes(key: String): String[];
+    getAttributes(key: string): string[];
 
 
 }
 
 declare interface CurrentUser {
-    getId(): String;
+    getId(): string;
     getPreferences(): { [key: string]: string };
 }
 
 declare interface EditorManager {
-    addFileOperationListener(listener: { (event: FileOperationEvent): void }): Disposable;
-    addEditorOpenedListener(listener: { (event: EditorOpenedEvent): void }): Disposable;
-}
 
-declare interface EditorOpenedEvent {
-    getFile(): VirtualFile;
-    getEditor(): EditorPartPresenter;
 }
 
 declare interface EditorPartPresenter {
     //TODO 
 }
 
-declare interface FileOperationEvent {
-    getFile(): VirtualFile;
-
-    getOperationType(): che.ide.editor.FileOperation
-}
-
 declare interface VirtualFile {
     getLocation(): che.ide.resource.Path;
-    getName(): String;
-    getDisplayName(): String;
+    getName(): string;
+    getDisplayName(): string;
     isReadOnly(): boolean;
-    getContentUrl(): String;
-    getContent(): Promise<String>;
-    updateContent(content: String): Promise<void>;
-}
-
-declare interface WorkspaceRuntime {
-    addServerRunningListener(listener: { (event: ServerRunningEvent): void }): Disposable;
-
-    addWsAgentServerRunningListener(listener: { (event: WsAgentServerRunningEvent): void }): Disposable;
-
-    addTerminalAgentServerRunningListener(listener: { (event: TerminalAgentServerRunningEvent): void }): Disposable;
-
-    addExecAgentServerRunningListener(listener: { (event: ExecAgentServerRunningEvent): void }): Disposable;
-
-    addServerStoppedListener(listener: { (event: ServerStoppedEvent): void }): Disposable;
-
-    addWsAgentServerStoppedListener(listener: { (event: WsAgentServerStoppedEvent): void }): Disposable;
-
-    addTerminalAgentServerStoppedListener(listener: { (event: TerminalAgentServerStoppedEvent): void }): Disposable;
-
-    addExecAgentServerStoppedListener(listener: { (event: ExecAgentServerStoppedEvent): void }): Disposable;
-}
-
-declare interface ServerRunningEvent {
-    getServerName(): String;
-
-    getMachineName(): String;
-}
-
-declare interface WsAgentServerRunningEvent {
-    getMachineName(): String;
-}
-
-declare interface TerminalAgentServerRunningEvent {
-    getMachineName(): String;
-}
-
-declare interface ExecAgentServerRunningEvent {
-    getMachineName(): String;
-}
-
-declare interface ServerStoppedEvent {
-    getServerName(): String;
-
-    getMachineName(): String;
-}
-
-declare interface WsAgentServerStoppedEvent {
-    getMachineName(): String;
-}
-
-declare interface TerminalAgentServerStoppedEvent {
-    getMachineName(): String;
-}
-
-declare interface ExecAgentServerStoppedEvent {
-    getMachineName(): String;
+    getContentUrl(): string;
+    getContent(): Promise<string>;
+    updateContent(content: string): Promise<void>;
 }
 
 declare interface PartManager {
@@ -297,7 +238,7 @@ declare interface PartManager {
 
 declare interface Part {
     /** @return Title of the Part */
-    getTitle(): String;
+    getTitle(): string;
 
     /**
      * Returns count of unread notifications. Is used to display a badge on part button.
@@ -314,7 +255,7 @@ declare interface Part {
      *
      * @return the part title tool tip (not <code>null</code>)
      */
-    getTitleToolTip(): String;
+    getTitleToolTip(): string;
 
     /**
      * Return size of part. If current part is vertical panel then size is height. If current part is
@@ -333,7 +274,7 @@ declare interface Part {
     /** @return */
     getView(): Element;
 
-    getImageId(): String;
+    getImageId(): string;
 }
 
 declare namespace che {
@@ -357,7 +298,7 @@ declare namespace che {
                  * segment delimiters, and any segment and device delimiters for the local file system are also
                  * respected.
                  */
-                static valueOf(pathString: String): Path;
+                static valueOf(pathstring: string): Path;
 
                 /** 
                  * Returns a new path which is the same as this path but with the given file extension added. If
@@ -404,7 +345,7 @@ declare namespace che {
                  * ignored). Duplicate slashes are removed from the path except at the beginning where the path is
                  * considered to be UNC.
                  */
-                append(path: String): Path;
+                append(path: string): Path;
 
                 equals(obj: any): boolean;
 
@@ -414,7 +355,7 @@ declare namespace che {
                  *
                  * @return the device id, or <code>null</code>
                  */
-                getDevice(): String;
+                getDevice(): string;
                 /**
                  * Returns the file extension portion of this path, or <code>null</code> if there is none.
                  *
@@ -425,7 +366,7 @@ declare namespace che {
                  *
                  * @return the file extension or <code>null</code>
                  */
-                getFileExtension(): String;
+                getFileExtension(): string;
                 /**
                  * Returns whether this path has a trailing separator.
                  *
@@ -435,7 +376,7 @@ declare namespace che {
                  * @return <code>true</code> if this path has a trailing separator, and <code>false</code>
                  *     otherwise
                  */
-                hasTrailingSeparator():boolean;
+                hasTrailingSeparator(): boolean;
 
                 /**
                  * Returns whether this path has a leading separator.
@@ -446,7 +387,7 @@ declare namespace che {
                  * @return <code>true</code> if this path has a leading separator, and <code>false</code>
                  *     otherwise
                  */
-                hasLeadingSeparator():boolean;
+                hasLeadingSeparator(): boolean;
                 /**
                  * Returns whether this path is an absolute path (ignoring any device id).
                  *
@@ -455,14 +396,14 @@ declare namespace che {
                  *
                  * @return <code>true</code> if this path is an absolute path, and <code>false</code> otherwise
                  */
-                isAbsolute():boolean;
+                isAbsolute(): boolean;
 
                 /**
                  * Returns whether this path has no segments and is not a root path.
                  *
                  * @return <code>true</code> if this path is empty, and <code>false</code> otherwise
                  */
-                isEmpty():boolean;
+                isEmpty(): boolean;
                 /**
                  * Returns whether this path is a prefix of the given path. To be a prefix, this path's segments
                  * must appear in the argument path in the same order, and their device ids must match.
@@ -500,7 +441,7 @@ declare namespace che {
                  *
                  * @return the last segment of this path, or <code>null</code>
                  */
-                lastSegment() : String;
+                lastSegment(): string;
 
                 /**
                  * Returns an absolute path with the segments and device id of this path. Absolute paths start
@@ -508,7 +449,7 @@ declare namespace che {
                  *
                  * @return the new path
                  */
-                makeAbsolute() : Path;
+                makeAbsolute(): Path;
 
                 /**
                  * Returns a relative path with the segments and device id of this path. Absolute paths start with
@@ -538,7 +479,7 @@ declare namespace che {
                  * @param anotherPath the other path
                  * @return the number of matching segments
                  */
-                matchingFirstSegments(anotherPath : Path): number;
+                matchingFirstSegments(anotherPath: Path): number;
 
                 /**
                  * Returns a new path which is the same as this path but with the file extension removed. If this
@@ -551,7 +492,7 @@ declare namespace che {
                  *
                  * @return the new path
                  */
-                removeFileExtension():Path;
+                removeFileExtension(): Path;
 
                 /**
                  * Returns a copy of this path with the given number of segments removed from the beginning. The
@@ -575,7 +516,7 @@ declare namespace che {
                  *
                  * @param count the number of segments to remove
                  */
-                removeLastSegments(count: number) : Path;
+                removeLastSegments(count: number): Path;
                 /**
                  * Returns a path with the same segments as this path but with a trailing separator removed. Does
                  * nothing if this path does not have at least one segment. The device id is preserved.
@@ -584,7 +525,7 @@ declare namespace che {
                  *
                  * @return the new path
                  */
-                removeTrailingSeparator() : Path;
+                removeTrailingSeparator(): Path;
 
                 /**
                  * Returns the specified segment of this path, or <code>null</code> if the path does not have such
@@ -593,14 +534,14 @@ declare namespace che {
                  * @param index the 0-based segment index
                  * @return the specified segment, or <code>null</code>
                  */
-                segment(index: number): String;
+                segment(index: number): string;
                 /**
                  * Returns the number of segments in this path.
                  *
                  * <p>Note that both root and empty paths have 0 segments.
                  *
                  * @return the number of segments
-                 */   
+                 */
                 segmentCount(): number;
 
                 /**
@@ -608,7 +549,7 @@ declare namespace che {
                  *
                  * @return an array of string segments
                  */
-                segments(): String[];
+                segments(): string[];
 
                 /**
                  * Returns a new path which is the same as this path but with the given device id. The device id
@@ -619,7 +560,7 @@ declare namespace che {
                  * @param device the device id or <code>null</code>
                  * @return a new path
                  */
-                setDevice(device: String) : Path;
+                setDevice(device: string): Path;
 
                 /**
                  * Returns a string representation of this path, including its device id. The same separator, "/",
@@ -642,17 +583,17 @@ declare namespace che {
                  * "C:/"
                  * </pre>
                  *
-                 * This string is suitable for passing to <code>Path(String)</code>.
+                 * This string is suitable for passing to <code>Path(string)</code>.
                  *
                  * @return a string representation of this path
                  */
-                toString(): String;
+                tostring(): string;
                 /**
                  * Returns a copy of this path with removed last segment.
                  *
                  * @return the new path
                  */
-                parent():Path;
+                parent(): Path;
             }
         }
         namespace editor {
@@ -660,6 +601,18 @@ declare namespace che {
                 OPEN,
                 SAVE,
                 CLOSE
+            }
+            class FileOperationEvent {
+                static TYPE: EventType<FileOperationEvent>;
+
+                getFile(): VirtualFile;
+                getOperationType(): che.ide.editor.FileOperation
+            }
+            class EditorOpenedEvent {
+                static TYPE: EventType<EditorOpenedEvent>;
+
+                getFile(): VirtualFile;
+                getEditor(): EditorPartPresenter;
             }
         }
         namespace parts {
@@ -685,6 +638,55 @@ declare namespace che {
                  * RIGHT side of the IDE.
                  */
                 TOOLING
+            }
+        }
+        namespace workspace {
+            namespace event {
+                class ServerRunningEvent {
+                    static TYPE : EventType<ServerRunningEvent>;
+
+                    getServerName(): string;
+
+                    getMachineName(): string;
+                }
+
+                class WsAgentServerRunningEvent {
+                    static TYPE : EventType<WsAgentServerRunningEvent>;
+                    getMachineName(): string;
+                }
+
+                class TerminalAgentServerRunningEvent {
+                    static TYPE : EventType<TerminalAgentServerRunningEvent>;
+                    getMachineName(): string;
+                }
+
+                class ExecAgentServerRunningEvent {
+                    static TYPE : EventType<ExecAgentServerRunningEvent>;
+                    getMachineName(): string;
+                }
+
+                class ServerStoppedEvent {
+                    static TYPE : EventType<ServerStoppedEvent>;
+                    getServerName(): string;
+
+                    getMachineName(): string;
+                }
+
+                class WsAgentServerStoppedEvent {
+                    static TYPE : EventType<WsAgentServerStoppedEvent>;
+                    getMachineName(): string;
+                }
+
+                class TerminalAgentServerStoppedEvent {
+                    static TYPE : EventType<TerminalAgentServerStoppedEvent>;
+                    getMachineName(): string;
+                }
+
+                class ExecAgentServerStoppedEvent {
+                    static TYPE : EventType<ExecAgentServerStoppedEvent>;
+                    getMachineName(): string;
+                }
+
             }
         }
     }

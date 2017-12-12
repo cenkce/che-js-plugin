@@ -8,13 +8,13 @@ export class HelloPart implements Part {
         this.title = title;
     }
 
-    getTitle(): String {
+    getTitle(): string {
         return this.title;
     }
     getUnreadNotificationsCount(): number {
         return 0;
     }
-    getTitleToolTip(): String {
+    getTitleToolTip(): string {
         return "JS Part View"
     }
     getSize(): number {
@@ -29,7 +29,7 @@ export class HelloPart implements Part {
         return view;
     }
 
-    getImageId(): String {
+    getImageId(): string {
         return "js.plugin.png"
     }
 }
