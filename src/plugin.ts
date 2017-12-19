@@ -2,6 +2,7 @@
 import { initActions } from './actions';
 import { HelloPart } from './HelloPart';
 import {handleEvents} from './events';
+import {handleResources} from './resources';
 import './clock/clock.css';
 
 const  snowflake = require('./snowflake.svg');
@@ -19,6 +20,7 @@ export function activate(ctx: PluginContext) {
   ctx.addDisposable(d);
   handleEvents(ctx);
   initActions(ctx);
+  handleResources(ctx);
 }
 
 export function deactivate(ctx: PluginContext){

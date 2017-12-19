@@ -1,6 +1,7 @@
 {
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "node_modules/che-types"
     ],
     "outDir": "./dist",
     "noImplicitAny": true,
