@@ -1,6 +1,7 @@
 {
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "node_modules/eclipse-che"
     ],
     "outDir": "./dist",
     "noImplicitAny": true,

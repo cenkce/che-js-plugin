@@ -113,7 +113,6 @@
     "dom-loader": "^1.0.4"
   },
   "devDependencies": {
-    "che-types": "^1.0.1",
     "clean-webpack-plugin": "^0.1.17",
     "css-loader": "^0.28.7",
     "file-loader": "^1.1.6",
