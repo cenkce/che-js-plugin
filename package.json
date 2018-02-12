@@ -10,7 +10,10 @@
   "loader": "AMD",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "bundle": "node_modules/.bin/webpack --config webpack.config.js"
+    "bundle": "node_modules/.bin/webpack --config webpack.config.js",
+    "watch": "npm run link:ln && webpack --watch --config webpack.config.js",
+    "link:mn": "cp -Rf dist src theme $CHE_JS_PLUGIN_DIR/redhat.che-js-plugin-3.0.0",
+    "link:ln": "rm -rf $CHE_JS_PLUGIN_DIR/redhat.che-js-plugin-3.0.0/dist && ln -rs dist/ $CHE_JS_PLUGIN_DIR/redhat.che-js-plugin-3.0.0/"
   },
   "repository": {
     "type": "git",
